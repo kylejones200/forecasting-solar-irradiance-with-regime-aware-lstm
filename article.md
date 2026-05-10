@@ -1,18 +1,18 @@
+---
+author: "Kyle Jones"
+date_published: "July 15, 2025"
+date_exported_from_medium: "November 10, 2025"
+canonical_link: "https://medium.com/@kyle-t-jones/forecasting-solar-irradiance-with-regime-aware-lstm-29830cbe220e"
+---
+
 # Forecasting Solar Irradiance with Regime-Aware LSTM Utilities and grid operators rely on accurate solar forecasts to manage
 generation, maintain reliability, and avoid unnecessary...
 
-::::### Forecasting Solar Irradiance with Regime-Aware LSTM 
+### Forecasting Solar Irradiance with Regime-Aware LSTM 
 
-Utilities and grid operators rely on accurate solar forecasts to manage
-generation, maintain reliability, and avoid unnecessary curtailment. As
-solar penetration increases, errors in irradiance forecasting can
-translate directly into balancing costs, reserve overcommitment, or
-missed financial targets.
+Utilities and grid operators rely on accurate solar forecasts to manage generation, maintain reliability, and avoid unnecessary curtailment. As solar penetration increases, errors in irradiance forecasting can translate directly into balancing costs, reserve overcommitment, or missed financial targets.
 
-This post shows how to improve solar irradiance forecasting using a
-regime-aware LSTM model trained on real SolarAnywhere® data. We compare
-this model to a vanilla LSTM and find that even a basic seasonal regime
-feature improves predictive accuracy.
+This post shows how to improve solar irradiance forecasting using a regime-aware LSTM model trained on real SolarAnywhere® data. We compare this model to a vanilla LSTM and find that even a basic seasonal regime feature improves predictive accuracy.
 
 ### The Business Context
 Short-term solar forecasting supports:
@@ -21,35 +21,22 @@ Short-term solar forecasting supports:
 - **Reserve scheduling** (how much backup is needed)
 - **Curtailment prevention** (avoiding wasted power)
 
-Forecasting solar irradiance is difficult due to rapid weather changes,
-cloud formations, and seasonal patterns. Machine learning models often
-struggle with these nonlinear shifts.
+Forecasting solar irradiance is difficult due to rapid weather changes, cloud formations, and seasonal patterns. Machine learning models often struggle with these nonlinear shifts.
 
-To address this, we use regime-aware modeling. Regimes represent
-distinct operating conditions like sunny vs. cloudy seasons or periods
-of high vs. low irradiance variability. These regimes act as context
-features, allowing the model to condition its predictions on recent
-temporal structure.
+To address this, we use regime-aware modeling. Regimes represent distinct operating conditions like sunny vs. cloudy seasons or periods of high vs. low irradiance variability. These regimes act as context features, allowing the model to condition its predictions on recent temporal structure.
 
 ### The Data
-We use **SolarAnywhere Time Series** data for a location near Bellevue,
-WA. It includes hourly observations of Global Horizontal Irradiance
-(GHI), Ambient Temperature, Relative Humidity, and Wind Speed.
+We use **SolarAnywhere Time Series** data for a location near Bellevue, WA. It includes hourly observations of Global Horizontal Irradiance (GHI), Ambient Temperature, Relative Humidity, and Wind Speed.
 
-We resample the data to daily frequency and create four seasonal regimes
-by dividing the year into quarters. Each row contains the average GHI
-and weather conditions for a day, plus a regime label (0--3).
+We resample the data to daily frequency and create four seasonal regimes by dividing the year into quarters. Each row contains the average GHI and weather conditions for a day, plus a regime label (0--3).
 
 ### Modeling Approach
 We train two models:
 
-1.  [**Vanilla LSTM** --- standard recurrent neural network using only
-    time series features.]
-2.  [**Regime-Aware LSTM** --- same model, but with a learned embedding
-    for the regime label, which augments each input sequence.]
+1.  [**Vanilla LSTM** --- standard recurrent neural network using only time series features.]
+2.  [**Regime-Aware LSTM** --- same model, but with a learned embedding for the regime label, which augments each input sequence.]
 
-Each model learns to predict the next day's GHI based on the past 30
-days of features. We compare mean squared error (MSE) after 10 epochs.
+Each model learns to predict the next day's GHI based on the past 30 days of features. We compare mean squared error (MSE) after 10 epochs.
 
 ### Results
 Model MSE
@@ -58,24 +45,18 @@ Vanilla LSTM 0.0372
 
 Regime-Aware LSTM 0.0345 ✅
 
-Adding a regime embedding improves MSE by \~7%, despite no additional
-data.
+Adding a regime embedding improves MSE by \~7%, despite no additional data.
 
 Let's plot the predictions from both models against the true GHI values:
 
 
-::::Even simple regime features --- like seasonal groupings --- can boost
-the accuracy of deep learning models in energy forecasting. This pattern
-can generalize to other domains: power price prediction, wind energy
-forecasting, or even grid congestion modeling.
+Even simple regime features --- like seasonal groupings --- can boost the accuracy of deep learning models in energy forecasting. This pattern can generalize to other domains: power price prediction, wind energy forecasting, or even grid congestion modeling.
 
 Future work could include:
 
 - Using **Markov Switching models** to define latent regimes
-- Incorporating **cloud cover forecasts** or **satellite
-  imagery**
-- Extending to **probabilistic LSTM** or **quantile
-  regression**
+- Incorporating **cloud cover forecasts** or **satellite imagery**
+- Extending to **probabilistic LSTM** or **quantile regression**
 
 ### Full Code
 ```python
@@ -195,10 +176,3 @@ plt.tight_layout()
 plt.savefig("ghi_lstm_comparison.png")
 plt.show()
 ```
-::::::::::::By [Kyle Jones](https://medium.com/@kyle-t-jones) on
-[July 15, 2025](https://medium.com/p/29830cbe220e).
-
-[Canonical
-link](https://medium.com/@kyle-t-jones/forecasting-solar-irradiance-with-regime-aware-lstm-29830cbe220e)
-
-Exported from [Medium](https://medium.com) on November 10, 2025.
