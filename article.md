@@ -17,24 +17,24 @@ This post shows how to improve solar irradiance forecasting using a regime-aware
 ### The Business Context
 Short-term solar forecasting supports:
 
-- **Grid planning** (when and where energy is available)
-- **Reserve scheduling** (how much backup is needed)
-- **Curtailment prevention** (avoiding wasted power)
+- Grid planning (when and where energy is available)
+- Reserve scheduling (how much backup is needed)
+- Curtailment prevention (avoiding wasted power)
 
 Forecasting solar irradiance is difficult due to rapid weather changes, cloud formations, and seasonal patterns. Machine learning models often struggle with these nonlinear shifts.
 
 To address this, we use regime-aware modeling. Regimes represent distinct operating conditions like sunny vs. cloudy seasons or periods of high vs. low irradiance variability. These regimes act as context features, allowing the model to condition its predictions on recent temporal structure.
 
 ### The Data
-We use **SolarAnywhere Time Series** data for a location near Bellevue, WA. It includes hourly observations of Global Horizontal Irradiance (GHI), Ambient Temperature, Relative Humidity, and Wind Speed.
+We use SolarAnywhere Time Series data for a location near Bellevue, WA. It includes hourly observations of Global Horizontal Irradiance (GHI), Ambient Temperature, Relative Humidity, and Wind Speed.
 
 We resample the data to daily frequency and create four seasonal regimes by dividing the year into quarters. Each row contains the average GHI and weather conditions for a day, plus a regime label (0--3).
 
 ### Modeling Approach
 We train two models:
 
-1.  [**Vanilla LSTM** --- standard recurrent neural network using only time series features.]
-2.  [**Regime-Aware LSTM** --- same model, but with a learned embedding for the regime label, which augments each input sequence.]
+1.  [Vanilla LSTM --- standard recurrent neural network using only time series features.]
+2.  [Regime-Aware LSTM --- same model, but with a learned embedding for the regime label, which augments each input sequence.]
 
 Each model learns to predict the next day's GHI based on the past 30 days of features. We compare mean squared error (MSE) after 10 epochs.
 
@@ -54,9 +54,9 @@ Even simple regime features --- like seasonal groupings --- can boost th
 
 Future work could include:
 
-- Using **Markov Switching models** to define latent regimes
-- Incorporating **cloud cover forecasts** or **satellite imagery**
-- Extending to **probabilistic LSTM** or **quantile regression**
+- Using Markov Switching models to define latent regimes
+- Incorporating cloud cover forecasts or satellite imagery
+- Extending to probabilistic LSTM or quantile regression
 
 ### Full Code
 ```python
