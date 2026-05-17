@@ -184,7 +184,6 @@ print(pd.crosstab(transitions["From"], transitions["To"]))
 
 # --- code cell ---
 
-import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -193,7 +192,6 @@ import seaborn as sns
 from matplotlib.animation import FuncAnimation, PillowWriter
 from statsmodels.tsa.regime_switching.markov_regression import MarkovRegression
 
-warnings.filterwarnings("ignore")
 
 # [Your existing data preparation and model fitting code]
 
@@ -304,7 +302,6 @@ anim.save("regime_switching_animation.gif", writer=writer)
 
 # --- code cell ---
 
-import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -313,7 +310,6 @@ import seaborn as sns
 from matplotlib.animation import FuncAnimation, PillowWriter
 from statsmodels.tsa.regime_switching.markov_regression import MarkovRegression
 
-warnings.filterwarnings("ignore")
 
 # [Your existing data preparation code remains the same]
 
@@ -340,7 +336,7 @@ def get_regime_predictions(data):
             return pred_regimes, result
         else:
             return np.zeros(len(data)), None
-    except:
+    except Exception:
         return np.zeros(len(data)), None
 
 
