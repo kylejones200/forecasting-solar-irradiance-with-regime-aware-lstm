@@ -2,6 +2,8 @@
 
 Magics and shell lines are commented out. Run with a normal Python interpreter."""
 
+import warnings
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -99,11 +101,11 @@ def get_regime_predictions(data):
             return (pred_regimes, result)
         else:
             return (np.zeros(len(data)), None)
-    except Exception:
+    except:
         return (np.zeros(len(data)), None)
 
 
-def main() -> None:
+def fit_a_markov_switching_model() -> None:
     np.random.seed(42)
 
     n = 500
@@ -132,6 +134,8 @@ def main() -> None:
 
     print(result.regime_transition)
 
+
+def fit_a_markov_switching_model_2() -> None:
     np.random.seed(42)
 
     n = 500
@@ -186,6 +190,8 @@ def main() -> None:
 
     plt.show()
 
+
+def plot_1_original_data_with_regime_highlighting() -> None:
     np.random.seed(42)
 
     n = 500
@@ -318,6 +324,10 @@ def main() -> None:
 
     print(pd.crosstab(transitions["From"], transitions["To"]))
 
+
+def your_existing_data_preparation_and_model_fitting() -> None:
+    warnings.filterwarnings("ignore")
+
     fig = plt.figure(figsize=(20, 10))
 
     gs = fig.add_gridspec(2, 2)
@@ -344,6 +354,10 @@ def main() -> None:
 
     anim.save("regime_switching_animation.gif", writer=writer)
 
+
+def your_existing_data_preparation_code_remains_the() -> None:
+    warnings.filterwarnings("ignore")
+
     fig = plt.figure(figsize=(15, 10))
 
     gs = fig.add_gridspec(2, 3)
@@ -369,6 +383,14 @@ def main() -> None:
     writer = PillowWriter(fps=5)
 
     anim.save("regime_switching_animation.gif", writer=writer)
+
+
+def main() -> None:
+    fit_a_markov_switching_model()
+    fit_a_markov_switching_model_2()
+    plot_1_original_data_with_regime_highlighting()
+    your_existing_data_preparation_and_model_fitting()
+    your_existing_data_preparation_code_remains_the()
 
 
 if __name__ == "__main__":
