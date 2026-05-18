@@ -1,13 +1,13 @@
 """Compare vanilla LSTM vs regime-aware LSTM for solar GHI forecasting."""
 
-from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import MinMaxScaler
-from torch.utils.data import DataLoader, Dataset
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn as nn
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import MinMaxScaler
+from torch.utils.data import DataLoader, Dataset
 
 
 class TimeSeriesDataset(Dataset):
@@ -75,7 +75,9 @@ def main() -> None:
     dates = pd.date_range("2023-01-01", periods=365, freq="D")
     df = pd.DataFrame(
         {
-            "GHI": 200 + 80 * np.sin(2 * np.pi * dates.dayofyear / 365) + rng.normal(0, 10, len(dates)),
+            "GHI": 200
+            + 80 * np.sin(2 * np.pi * dates.dayofyear / 365)
+            + rng.normal(0, 10, len(dates)),
             "Temp": 15 + 10 * np.sin(2 * np.pi * dates.dayofyear / 365),
             "Humidity": rng.uniform(30, 90, len(dates)),
             "Wind": rng.uniform(0, 15, len(dates)),
@@ -83,20 +85,15 @@ def main() -> None:
         index=dates,
     )
     df["Regime"] = pd.cut(df.index.dayofyear, bins=4, labels=False).astype(int)
-
     features = ["GHI", "Temp", "Humidity", "Wind"]
     scaler = MinMaxScaler()
     df[features] = scaler.fit_transform(df[features])
-
     dataset = TimeSeriesDataset(df, features, seq_len=30)
     loader = DataLoader(dataset, batch_size=32, shuffle=True)
-
     vanilla = VanillaLSTM()
     train_model(vanilla, loader, epochs=5)
-
     regime_model = RegimeLSTM()
     train_model(regime_model, loader, epochs=5)
-
     vanilla.eval()
     regime_model.eval()
     with torch.no_grad():
@@ -110,7 +107,6 @@ def main() -> None:
     rmse_r = np.sqrt(mean_squared_error(y_true, np.vstack(preds_r).ravel()))
     print(f"Vanilla LSTM RMSE: {rmse_v:.4f}")
     print(f"Regime LSTM RMSE: {rmse_r:.4f}")
-
     plt.figure(figsize=(10, 4))
     plt.plot(y_true[:100], label="Actual", color="black")
     plt.plot(np.vstack(preds_v).ravel()[:100], label="Vanilla LSTM", alpha=0.8)

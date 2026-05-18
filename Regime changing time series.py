@@ -58,7 +58,7 @@ def animate(frame):
                 for p in range(min(2, confusion_matrix.shape[1])):
                     temp_matrix[t, p] = confusion_matrix[t, p]
             confusion_matrix = temp_matrix
-        im = ax4.imshow(confusion_matrix, cmap="Blues", interpolation="nearest")
+        ax4.imshow(confusion_matrix, cmap="Blues", interpolation="nearest")
         for (j, i), label in np.ndenumerate(confusion_matrix):
             ax4.text(
                 i,
@@ -75,9 +75,7 @@ def animate(frame):
         ax4.set_title("Confusion Matrix")
         if result is not None:
             transition_matrix = result.regime_transition.reshape(2, 2)
-            im2 = ax5.imshow(
-                transition_matrix, cmap="coolwarm", interpolation="nearest"
-            )
+            ax5.imshow(transition_matrix, cmap="coolwarm", interpolation="nearest")
             for (j, i), label in np.ndenumerate(transition_matrix):
                 ax5.text(i, j, f"{label:.2f}", ha="center", va="center")
             ax5.set_title("Transition Probability Matrix")
@@ -101,117 +99,68 @@ def get_regime_predictions(data):
             return (pred_regimes, result)
         else:
             return (np.zeros(len(data)), None)
-    except:
+    except Exception:
         return (np.zeros(len(data)), None)
 
 
 def fit_a_markov_switching_model() -> None:
     np.random.seed(42)
-
     n = 500
-
     regimes = np.random.choice([0, 1], size=n, p=[0.7, 0.3])
-
     data = np.array(np.random.normal(0, np.where(regimes == 0, 1, 5)))
-
     plt.figure(figsize=(10, 6))
-
     plt.plot(data, label="Simulated Data")
-
     plt.legend()
-
     plt.title("Simulated Data")
-
     plt.show()
-
     model = MarkovRegression(data, k_regimes=2, trend="c", switching_variance=True)
-
     result = model.fit()
-
     print(result.summary())
-
     print("\nTransition Matrix:")
-
     print(result.regime_transition)
 
 
 def fit_a_markov_switching_model_2() -> None:
     np.random.seed(42)
-
     n = 500
-
     regimes = np.random.choice([0, 1], size=n, p=[0.7, 0.3])
-
     data = np.array(np.random.normal(0, np.where(regimes == 0, 1, 5)))
-
     plt.figure(figsize=(10, 6))
-
     plt.plot(data, label="Simulated Data")
-
     plt.legend()
-
     plt.title("Simulated Data")
-
     plt.show()
-
     model = MarkovRegression(data, k_regimes=2, trend="c", switching_variance=True)
-
     result = model.fit()
-
     print(result.summary())
-
     print("\nTransition Matrix:")
-
     print(result.regime_transition)
-
     smoothed_probs = result.smoothed_marginal_probabilities[1]
-
     plt.figure(figsize=(10, 6))
-
     plt.plot(smoothed_probs, label="Smoothed Probabilities of High Volatility")
-
     plt.legend()
-
     plt.title("Smoothed Probabilities of High Volatility Regime")
-
     plt.show()
-
     predicted_regimes = np.argmax(result.smoothed_marginal_probabilities, axis=1)
-
     plt.figure(figsize=(10, 6))
-
     plt.plot(predicted_regimes, label="Predicted Regimes")
-
     plt.legend()
-
     plt.title("Predicted Regimes")
-
     plt.ylim(-0.1, 1.1)
-
     plt.show()
 
 
 def plot_1_original_data_with_regime_highlighting() -> None:
     np.random.seed(42)
-
     n = 500
-
     regimes = np.random.choice([0, 1], size=n, p=[0.7, 0.3])
-
     data = np.array(np.random.normal(0, np.where(regimes == 0, 1, 5)))
-
     df = pd.DataFrame({"Data": data, "True_Regime": regimes, "Time": range(n)})
-
     model = MarkovRegression(data, k_regimes=2, trend="c", switching_variance=True)
-
     result = model.fit()
-
     df["Predicted_Prob_High"] = result.smoothed_marginal_probabilities[:, 1]
-
     df["Predicted_Regime"] = np.argmax(result.smoothed_marginal_probabilities, axis=1)
-
     plt.figure(figsize=(12, 6))
-
     for regime in [0, 1]:
         mask = df["True_Regime"] == regime
         plt.scatter(
@@ -219,82 +168,46 @@ def plot_1_original_data_with_regime_highlighting() -> None:
         )
 
     plt.title("Original Data with True Regimes")
-
     plt.legend()
-
     plt.savefig("original_data_regimes.png")
-
     plt.close()
-
     plt.figure(figsize=(12, 6))
-
     plt.plot(df["True_Regime"], label="True Regime", alpha=0.6)
-
     plt.plot(df["Predicted_Regime"], label="Predicted Regime", alpha=0.6)
-
     plt.title("True vs Predicted Regimes")
-
     plt.legend()
-
     plt.savefig("true_vs_predicted_regimes.png")
-
     plt.close()
-
     plt.figure(figsize=(12, 6))
-
     for regime in [0, 1]:
         sns.kdeplot(
             data=df[df["True_Regime"] == regime]["Data"], label=f"Regime {regime}"
         )
 
     plt.title("Density Distribution by Regime")
-
     plt.legend()
-
     plt.savefig("density_distribution.png")
-
     plt.close()
-
     plt.figure(figsize=(8, 6))
-
     transition_matrix = result.regime_transition.reshape(2, 2)
-
     sns.heatmap(transition_matrix, annot=True, cmap="coolwarm")
-
     plt.title("Transition Probability Matrix")
-
     plt.xlabel("To Regime")
-
     plt.ylabel("From Regime")
-
     plt.savefig("transition_matrix.png")
-
     plt.close()
-
     plt.figure(figsize=(8, 6))
-
     confusion_matrix = pd.crosstab(df["True_Regime"], df["Predicted_Regime"])
-
     sns.heatmap(confusion_matrix, annot=True, fmt="d", cmap="Blues")
-
     plt.title("Confusion Matrix: True vs Predicted Regimes")
-
     plt.xlabel("Predicted Regime")
-
     plt.ylabel("True Regime")
-
     plt.savefig("confusion_matrix.png")
-
     plt.close()
-
     print("\nModel Performance Metrics:")
-
     accuracy = (df["True_Regime"] == df["Predicted_Regime"]).mean()
-
     print(f"Prediction Accuracy: {accuracy:.2%}")
-
     print("\nRegime Statistics:")
-
     for regime in [0, 1]:
         regime_data = df[df["True_Regime"] == regime]["Data"]
         print(f"\nRegime {regime}:")
@@ -304,7 +217,6 @@ def plot_1_original_data_with_regime_highlighting() -> None:
         print(f"Kurtosis: {stats.kurtosis(regime_data):.2f}")
 
     print("\nAverage Duration in Each Regime:")
-
     for regime in [0, 1]:
         regime_runs = (
             (df["Predicted_Regime"] == regime)
@@ -319,69 +231,41 @@ def plot_1_original_data_with_regime_highlighting() -> None:
     transitions = pd.DataFrame(
         {"From": df["Predicted_Regime"][:-1], "To": df["Predicted_Regime"][1:]}
     )
-
     print("\nTransition Counts:")
-
     print(pd.crosstab(transitions["From"], transitions["To"]))
 
 
 def your_existing_data_preparation_and_model_fitting() -> None:
     warnings.filterwarnings("ignore")
-
     fig = plt.figure(figsize=(20, 10))
-
     gs = fig.add_gridspec(2, 2)
-
-    ax1 = fig.add_subplot(gs[0, 0])
-
-    ax2 = fig.add_subplot(gs[0, 1])
-
-    ax3 = fig.add_subplot(gs[1, 0])
-
-    ax4 = fig.add_subplot(gs[1, 1])
-
+    fig.add_subplot(gs[0, 0])
+    fig.add_subplot(gs[0, 1])
+    fig.add_subplot(gs[1, 0])
+    fig.add_subplot(gs[1, 1])
     plt.close()
-
-    confusion_matrix = np.zeros((2, 2))
-
+    np.zeros((2, 2))
     step = 5
-
     frames = range(10, len(df), step)
-
     anim = FuncAnimation(fig, animate, frames=frames, interval=100, blit=False)
-
     writer = PillowWriter(fps=10)
-
     anim.save("regime_switching_animation.gif", writer=writer)
 
 
 def your_existing_data_preparation_code_remains_the() -> None:
     warnings.filterwarnings("ignore")
-
     fig = plt.figure(figsize=(15, 10))
-
     gs = fig.add_gridspec(2, 3)
-
-    ax1 = fig.add_subplot(gs[0, 0])
-
-    ax2 = fig.add_subplot(gs[0, 1])
-
-    ax3 = fig.add_subplot(gs[0, 2])
-
-    ax4 = fig.add_subplot(gs[1, 0])
-
-    ax5 = fig.add_subplot(gs[1, 1])
-
+    fig.add_subplot(gs[0, 0])
+    fig.add_subplot(gs[0, 1])
+    fig.add_subplot(gs[0, 2])
+    fig.add_subplot(gs[1, 0])
+    fig.add_subplot(gs[1, 1])
     plt.close()
-
     step = 10
-
     frames = range(20, len(df), step)
-
     anim = FuncAnimation(fig, animate, frames=frames, interval=200, blit=False)
-
     writer = PillowWriter(fps=5)
-
     anim.save("regime_switching_animation.gif", writer=writer)
 
 
