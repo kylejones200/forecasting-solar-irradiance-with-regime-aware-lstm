@@ -1,5 +1,8 @@
 """Compare vanilla LSTM vs regime-aware LSTM for solar GHI forecasting."""
 
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -115,7 +118,7 @@ def main() -> None:
     plt.title("Solar GHI: Vanilla vs Regime-Aware LSTM")
     plt.tight_layout()
     plt.savefig("lstm_regime_comparison.png", dpi=150)
-    plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":

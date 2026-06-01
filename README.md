@@ -11,14 +11,7 @@ This post shows how to improve solar irradiance forecasting using a regime-aware
 
 - Grid planning (when and where energy is available) - Reserve scheduling (how much backup is needed) - Curtailment prevention (avoiding wasted power)
 
-## About
 
-Place the code for this article in this repository.
-The original article export is saved as `article.md`.
-
-## Files
-
-Add your `.ipynb`, `.py`, `.yaml`, `.js`, `.ts`, or other project files here.
 
 ## Disclaimer
 

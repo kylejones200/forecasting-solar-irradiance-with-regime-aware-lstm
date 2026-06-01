@@ -97,8 +97,7 @@ def get_regime_predictions(data):
         if probs is not None and probs.shape[1] >= 2:
             pred_regimes = (probs[:, 1] > 0.5).astype(int)
             return (pred_regimes, result)
-        else:
-            return (np.zeros(len(data)), None)
+        return (np.zeros(len(data)), None)
     except Exception:
         return (np.zeros(len(data)), None)
 
